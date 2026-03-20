@@ -1,0 +1,85 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.67kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/i386/debian:bookworm-slim
+#2 DONE 2.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [ 1/14] FROM docker.io/i386/debian:bookworm-slim@sha256:76cdf53d2cd7b91478a16ac1dac5e8adc1f4e58f9ef72108f78f4bf50e69785b
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 123B done
+#5 DONE 0.0s
+
+#6 [ 2/14] WORKDIR /root/build
+#6 CACHED
+
+#7 [ 3/14] RUN apt-get update &&     apt-get install -y --no-install-recommends     linux-image-686     systemd-sysv     locales     wget gnupg dirmngr ca-certificates curl &&     curl -s https://archive.kali.org/archive-key.asc -o /etc/apt/trusted.gpg.d/kali-archive-key.asc &&     echo "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list &&     rm -f /etc/apt/sources.list.d/* &&     apt-get update &&     apt-get install -y --no-install-recommends     isc-dhcp-client sudo ifupdown iproute2 iputils-ping net-tools dnsutils procps htop kmod nano vim     tmux less file tree jq lsof strace tcpdump unzip p7zip-full xz-utils     git build-essential python3-pip python3-venv socat proxychains4 openssh-client     rlwrap smbclient cifs-utils openssl whois &&     apt-get dist-upgrade -y &&     apt-get install -y kali-linux-headless &&     rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [ 5/14] COPY getty-noclear.conf getty-override.conf /etc/systemd/system/getty@tty1.service.d/
+#8 CACHED
+
+#9 [ 6/14] COPY getty-autologin-serial.conf /etc/systemd/system/serial-getty@ttyS0.service.d/
+#9 CACHED
+
+#10 [ 4/14] RUN echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen &&     locale-gen &&     echo 'LANG="en_US.UTF-8"' > /etc/default/locale &&     chsh -s /bin/bash root
+#10 CACHED
+
+#11 [ 7/14] RUN systemctl enable serial-getty@ttyS0.service
+#11 CACHED
+
+#12 [ 8/14] RUN systemctl disable systemd-timesyncd.service || true;     systemctl disable apt-daily.timer || true;     systemctl disable apt-daily-upgrade.timer || true
+#12 0.178 Failed to disable unit: Unit systemd-timesyncd.service does not exist
+#12 0.178 Failed to disable unit: Unit systemd-timesyncd.service does not exist
+#12 0.183 Removed '/etc/systemd/system/timers.target.wants/apt-daily.timer'.
+#12 0.188 Removed '/etc/systemd/system/timers.target.wants/apt-daily-upgrade.timer'.
+#12 DONE 0.2s
+
+#13 [ 9/14] RUN printf '%s\n' 9p 9pnet 9pnet_virtio virtio virtio_ring virtio_pci | tee -a /etc/initramfs-tools/modules
+#13 0.785 9p
+#13 0.785 9pnet
+#13 0.785 9pnet_virtio
+#13 0.785 virtio
+#13 0.785 virtio_ring
+#13 0.785 virtio_pci
+#13 DONE 0.8s
+
+#14 [10/14] RUN echo '#!/bin/sh' > /etc/initramfs-tools/scripts/boot-9p &&     echo 'case $1 in prereqs) exit 0;; esac' >> /etc/initramfs-tools/scripts/boot-9p &&     echo '. /scripts/functions' >> /etc/initramfs-tools/scripts/boot-9p &&     echo 'mountroot() {' >> /etc/initramfs-tools/scripts/boot-9p &&     echo '    mkdir -p ${rootmnt}' >> /etc/initramfs-tools/scripts/boot-9p &&     echo '    mount -n -t 9p -o trans=virtio,version=9p2000.L,cache=loose,rw host9p ${rootmnt}' >> /etc/initramfs-tools/scripts/boot-9p &&     echo '}' >> /etc/initramfs-tools/scripts/boot-9p &&     chmod +x /etc/initramfs-tools/scripts/boot-9p
+#14 DONE 0.3s
+
+#15 [11/14] RUN echo 'BOOT=boot-9p' | tee -a /etc/initramfs-tools/initramfs.conf
+#15 0.224 BOOT=boot-9p
+#15 DONE 0.3s
+
+#16 [12/14] RUN update-initramfs -u
+#16 0.384 update-initramfs: Generating /boot/initrd.img-6.1.0-44-686
+#16 0.389 W: No zstd in /usr/bin:/sbin:/bin, using gzip
+#16 1.586 cryptsetup: ERROR: Couldn't resolve device overlay
+#16 1.586 cryptsetup: WARNING: Couldn't determine root device
+#16 1.589 cryptsetup: ERROR: Couldn't resolve device /dev/dm-2
+#16 1.829 I: The initramfs will attempt to resume from /dev/dm-2
+#16 1.829 I: Set the RESUME variable to override this.
+#16 DONE 7.1s
+
+#17 [13/14] RUN {     echo 'echo "127.0.0.1 localhost" > /etc/hosts';     echo 'echo "localhost" > /etc/hostname';     echo 'hostname localhost';     echo 'echo -e "\n\nCLI_READY\n" > /dev/ttyS0'; } >> /root/.bashrc
+#17 DONE 0.3s
+
+#18 [14/14] WORKDIR /root
+#18 DONE 0.1s
+
+#19 exporting to image
+#19 exporting layers
+#19 exporting layers 66.2s done
+#19 writing image sha256:12d22543d66914dec28cb1a977168dd40b1abab7735f18dd00fcc8cf76d620e6 done
+#19 naming to docker.io/local/debian-kali-v86 0.0s done
+#19 DONE 66.2s
+
+View build details: docker-desktop://dashboard/build/default/default/yoaxmah1pn2ooayrqe9shzaxf
